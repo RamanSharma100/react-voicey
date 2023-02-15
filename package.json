@@ -1,6 +1,6 @@
 {
-  "name": "react-voice-controlled",
-  "description": "A react library that can make any react app voice controllabe without any additional code",
+  "name": "react-voicey",
+  "description": "A react component library that can make any react app voice controllabe without any additional code",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "files": [

@@ -2,7 +2,7 @@ import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
 import { InitializeVoiceControls } from "./InitializeVoiceControls";
-import { DEFAULT_SCROLLING_COMMANDS } from "../../constants";
+// import { DEFAULT_SCROLLING_COMMANDS } from "../../constants";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {

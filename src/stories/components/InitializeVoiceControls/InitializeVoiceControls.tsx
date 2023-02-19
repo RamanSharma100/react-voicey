@@ -1,9 +1,4 @@
 import React, { FunctionComponent as FC } from "react";
-import {
-  faMicrophone,
-  faMicrophoneSlash,
-  faTableCells,
-} from "@fortawesome/free-solid-svg-icons";
 import { toast, ToastContainer } from "react-toastify";
 
 import { recognition } from "../../APIs/speechRecognitionAPI";
@@ -15,6 +10,9 @@ import "./InitializeVoiceControls.css";
 import { IVoiceCommandsProps } from "../../interfaces";
 import { checkCommandType, ICommandType } from "../../methods/checkCommandType";
 import VoiceControlsInstructionTable from "../VoiceControlsInstructionTable/VoiceControlsInstructionTable";
+import MicrophoneIcon from "../Icons/MicrophoneIcon";
+import MicrophoneIconSlash from "../Icons/MicrophoneIconSlash";
+import CommandListIcon from "../Icons/CommandListIcon";
 
 interface InitializeVoiceControlsProps {
   commands: IVoiceCommandsProps;
@@ -247,7 +245,9 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
             className={`icon-button ${
               isListening ? "button-unmute" : "button-mute"
             }`}
-            faIcon={isListening ? faMicrophone : faMicrophoneSlash}
+            FaIcon={() =>
+              isListening ? <MicrophoneIcon /> : <MicrophoneIconSlash />
+            }
             onClick={() => {
               isListening ? stopRecognition() : startRecognition();
             }}
@@ -256,7 +256,7 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
             className={`icon-button ${
               isInstructionTableOpened ? "button-unmute" : "button-mute"
             }`}
-            faIcon={faTableCells}
+            FaIcon={() => <CommandListIcon />}
             onClick={() => {
               setIsInstructionTableOpened(!isInstructionTableOpened);
               toast.info(

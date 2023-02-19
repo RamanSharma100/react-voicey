@@ -1,7 +1,5 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./button.css";
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 interface ButtonProps {
   primary?: boolean;
@@ -9,7 +7,7 @@ interface ButtonProps {
   backgroundColor?: string;
   size?: "small" | "medium" | "large";
   label?: string;
-  faIcon?: IconProp;
+  FaIcon?: any;
   onClick?: () => void;
 }
 
@@ -22,7 +20,7 @@ export const Button = ({
   backgroundColor,
   label,
   className,
-  faIcon,
+  FaIcon,
   ...props
 }: ButtonProps) => {
   const mode = primary
@@ -40,7 +38,7 @@ export const Button = ({
       style={{ backgroundColor }}
       {...props}
     >
-      {faIcon && <FontAwesomeIcon icon={faIcon} />} {label}
+      {FaIcon && <FaIcon />} {label}
     </button>
   );
 };

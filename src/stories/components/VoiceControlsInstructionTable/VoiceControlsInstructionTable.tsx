@@ -1,10 +1,11 @@
-import { faClose } from "@fortawesome/free-solid-svg-icons";
+// import { faClose } from "@fortawesome/free-solid-svg-icons";
 import React, { FunctionComponent as FC } from "react";
 import { toast } from "react-toastify";
 import { DEFAULT_SCROLLING_COMMANDS } from "../../constants";
 import { IVoiceCommandsProps } from "../../interfaces";
 
 import { Button } from "../Button/Button";
+import CloseIcon from "../Icons/CloseIcon";
 
 import "./VoiceControlsInstructionTable.css";
 
@@ -37,7 +38,7 @@ const VoiceControlsInstructionTable: FC<IVoiceControlsInstructionTableProps> =
             </p>
             <Button
               className="button-instruction-table-close"
-              faIcon={faClose}
+              FaIcon={() => <CloseIcon />}
               onClick={(): void => {
                 setIsInstructionTableOpened(false);
                 toast.info("Closed Instruction Table!");

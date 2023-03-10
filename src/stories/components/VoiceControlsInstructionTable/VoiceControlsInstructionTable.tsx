@@ -29,6 +29,7 @@ const VoiceControlsInstructionTable: FC<IVoiceControlsInstructionTableProps> =
     startRecognition,
     setIsInstructionTableOpened,
   }) => {
+
     return (
       <div className="instruction-table-box">
         <div className="instruction-table-modal">

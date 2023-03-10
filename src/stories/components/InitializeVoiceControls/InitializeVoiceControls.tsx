@@ -13,10 +13,11 @@ import VoiceControlsInstructionTable from "../VoiceControlsInstructionTable/Voic
 import MicrophoneIcon from "../Icons/MicrophoneIcon";
 import MicrophoneIconSlash from "../Icons/MicrophoneIconSlash";
 import CommandListIcon from "../Icons/CommandListIcon";
+import detectRoutes from "../../methods/detectRoutes";
+import domToJson from "../../methods/domToJson";
 
 interface InitializeVoiceControlsProps {
   commands: IVoiceCommandsProps;
-  routes?: string[];
   enableNavigationControls: boolean;
   enableScrollingControls: boolean;
 }
@@ -28,13 +29,14 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
   },
   enableNavigationControls = false,
   enableScrollingControls = false,
-  routes = [],
 }) => {
   const [isListening, setIsListening] = React.useState<boolean>(false);
   const [isInstructionTableOpened, setIsInstructionTableOpened] =
     React.useState<boolean>(true);
   const [isSpeechRecognitionSupported, setIsSpeechRecognitionSupported] =
     React.useState<boolean>(false);
+  const [routes, setRoutes] = React.useState<string[]>([]);
+  const [domJSON, setDomJSON] = React.useState<any>();
 
   const maxScroll =
     document.documentElement.scrollHeight -
@@ -127,11 +129,23 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
               window.location.href = "/";
               return;
             }
+
+            if (routes.includes("#" + route)) {
+              // bring #+ route to top
+              document.querySelectorAll("a").forEach((a) => {
+                if (a.getAttribute("href") === "#" + route) {
+                  a.click();
+                }
+              });
+              return;
+            }
+
             if (routes.includes("/" + route)) {
               window.location.href = "/" + route;
               return;
             } else {
               toast.error("This route is not available!");
+              return;
             }
           }
         }
@@ -222,6 +236,21 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
       alert("Please switch to Chromium based browsers or Safari!");
     }
   }, []);
+
+  React.useEffect(() => {
+    console.log("useEffect inside VoiceControls root working");
+    window.addEventListener("DOMContentLoaded", () => {
+      console.log("DOMContentLoaded event fired!");
+    });
+    const domJSON = domToJson(document.body);
+    console.log(domJSON);
+    setDomJSON(domJSON);
+    const allRoutes = detectRoutes(domJSON);
+    console.log(allRoutes);
+    setRoutes(allRoutes);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [window.location.pathname]);
 
   return (
     <>

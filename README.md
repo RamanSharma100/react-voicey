@@ -10,19 +10,19 @@ A React library that enables voice controls for your React apps without the need
 
 ## Installation
 
-`npm install react-voice-controlled`
+`npm install react-voicey`
 <br/>
 <br/>
 or
 <br/>
 <br/>
-`yarn add react-voice-controlled`
+`yarn add react-voicey`
 
 ## Usage
 
 1. Download this library using anyone of the above commands.
 
-2. Import `InitializeVoiceControls` from `react-voice-controlled` in your React app.
+2. Import `InitializeVoiceControls` from `react-voicey` in your React app.
 
 3. Simply call `InitializeVoiceControls` in your App js to enable voice controls.
 
@@ -43,7 +43,7 @@ So, this library will also work in some browsers as given below:-
 ## Example and Demo
 
     import React from 'react';
-    import {InitializeVoiceControls} from 'react-voice-controlled';
+    import {InitializeVoiceControls} from 'react-voicey';
 
     const App = ()=> {
         <>
@@ -62,11 +62,6 @@ So, this library will also work in some browsers as given below:-
             }}
             enableNavigationControls
             enableScrollingControls
-            routes={[
-                '/',
-                '/about',
-                '/contact'
-            ]}
             />
         <div className="APP">
             Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aperiam officia ab beatae iure ex doloremque odit, vel illo eligendi totam at, ullam asperiores vero. Minima iste ipsum atque odit sint.
@@ -101,12 +96,3 @@ _default_: `false`
 A boolean value that determines whether you want to enable scrolling controls.
 
 _default_: `false`
-
-**routes**:
-`string[]` **_optional_**
-
-**_required with enableNavigationControls_**
-
-An array of strings that contains the routes you want to use.
-
-_default_: `[]`

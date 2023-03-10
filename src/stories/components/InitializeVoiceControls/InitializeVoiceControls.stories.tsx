@@ -1,4 +1,3 @@
-import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
 import { InitializeVoiceControls } from "./InitializeVoiceControls";
@@ -6,22 +5,20 @@ import { InitializeVoiceControls } from "./InitializeVoiceControls";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
-  title: "Example/InitializeVoiceControls",
+  title: "initialization/InitializeVoiceControls",
   component: InitializeVoiceControls,
-  // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {},
-} as ComponentMeta<typeof InitializeVoiceControls>;
+} as ComponentMeta<typeof InitializeVoiceControls> | any;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: ComponentStory<typeof InitializeVoiceControls> = (
   args: any
 ) => <InitializeVoiceControls {...args} />;
 
-export const EnableVoiceControls = Template.bind({});
+export const EnableVoiceControls: any = Template.bind({});
 
 EnableVoiceControls.args = {
   enableNavigationControls: true,
-  routes: ["/", "/about", "/contact"],
   enableScrollingControls: true,
   commands: {
     navigation: ["go to", "navigate to"],
@@ -35,9 +32,9 @@ EnableVoiceControls.argTypes = {
       type: "boolean",
     },
   },
-  routes: {
+  enableScrollingControls: {
     control: {
-      type: "array",
+      type: "boolean",
     },
   },
   commands: {

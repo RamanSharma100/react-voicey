@@ -5,6 +5,7 @@ export interface ICommandType {
   cmd: string;
   cmdName: string;
 }
+
 export const checkCommandType = (
   commandsList: any,
   command: string
@@ -12,22 +13,27 @@ export const checkCommandType = (
   let cmdName: string = "",
     cmdType: string = "";
   commandsList.scrolling = [
-    ...DEFAULT_SCROLLING_COMMANDS,
-    ...(commandsList.scrolling || []),
+    ...new Set([
+      ...DEFAULT_SCROLLING_COMMANDS,
+      ...(commandsList.scrolling || []),
+    ]),
   ];
-  console.log(commandsList);
-  Object.keys(commandsList).forEach((cType: string) => {
+  const keys: string[] = Object.keys(commandsList);
+
+  for (let i in keys) {
+    const cType: string = keys[i];
+
     const commandName = commandsList[cType.toLowerCase()].find(
       (cmd: string) => command.toLowerCase().includes(cmd.toLowerCase()) && cmd
     );
-    cmdName = commandName;
-    console.log(commandName);
-    console.log(cType);
 
-    if (commandName) {
+    if (commandName && cType) {
       cmdType = cType;
+      cmdName = commandName;
+    } else {
+      continue;
     }
-  });
+  }
 
   return {
     commandType: cmdType,

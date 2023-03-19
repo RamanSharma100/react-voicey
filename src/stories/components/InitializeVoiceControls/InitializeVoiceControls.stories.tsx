@@ -1,16 +1,13 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
 import { InitializeVoiceControls } from "./InitializeVoiceControls";
-// import { DEFAULT_SCROLLING_COMMANDS } from "../../constants";
 
-// More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
   title: "initialization/InitializeVoiceControls",
   component: InitializeVoiceControls,
   argTypes: {},
 } as ComponentMeta<typeof InitializeVoiceControls> | any;
 
-// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: ComponentStory<typeof InitializeVoiceControls> = (
   args: any
 ) => <InitializeVoiceControls {...args} />;

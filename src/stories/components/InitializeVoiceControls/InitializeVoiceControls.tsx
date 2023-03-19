@@ -32,7 +32,7 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
 }) => {
   const [isListening, setIsListening] = React.useState<boolean>(false);
   const [isInstructionTableOpened, setIsInstructionTableOpened] =
-    React.useState<boolean>(true);
+    React.useState<boolean>(false);
   const [isSpeechRecognitionSupported, setIsSpeechRecognitionSupported] =
     React.useState<boolean>(false);
   const [routes, setRoutes] = React.useState<string[]>([]);
@@ -46,12 +46,18 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
     recognition.start();
     toast.info("Started Listening Commands!");
     setIsListening(true);
+    if (window.localStorage) {
+      localStorage.setItem("isListening", "true");
+    }
   };
 
   const stopRecognition = (): void => {
     recognition.stop();
     toast.info("Stopped Listening Commands!");
     setIsListening(false);
+    if (window.localStorage) {
+      localStorage.removeItem("isListening");
+    }
   };
 
   recognition.onstart = (): void => {
@@ -65,6 +71,7 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
       command
     );
 
+    console.log({ commandType, cmd, cmdName });
     //stop taking commands
 
     if (isListening && command.toLowerCase().includes("stop taking commands")) {
@@ -115,39 +122,43 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
     // navigation commands
     if (enableNavigationControls) {
       if (commandType === "navigation") {
-        let route: string = "";
-        if (commands.navigation?.includes(cmdName.toLowerCase())) {
-          if (command.split(" ")[command.split(" ").length - 1] === "page") {
-            route = cmd.split(" ")[cmd.split(" ").indexOf("page") - 1];
-          }
-          if (command.split(" ")[command.split(" ").length - 1] === "route") {
-            route = cmd.split(" ")[cmd.split(" ").indexOf("route") - 1];
-          }
-
-          if (route && route !== "") {
-            if (route === "home" || route === "index") {
-              window.location.href = "/";
-              return;
+        if (routes.length > 0) {
+          let route: string = "";
+          if (commands.navigation?.includes(cmdName.toLowerCase())) {
+            if (command.split(" ")[command.split(" ").length - 1] === "page") {
+              route = cmd.split(" ")[cmd.split(" ").indexOf("page") - 1];
+            }
+            if (command.split(" ")[command.split(" ").length - 1] === "route") {
+              route = cmd.split(" ")[cmd.split(" ").indexOf("route") - 1];
             }
 
-            if (routes.includes("#" + route)) {
-              // bring #+ route to top
-              document.querySelectorAll("a").forEach((a) => {
-                if (a.getAttribute("href") === "#" + route) {
-                  a.click();
-                }
-              });
-              return;
-            }
+            if (route && route !== "") {
+              if (route === "home" || route === "index") {
+                window.location.href = "/";
+                return;
+              }
 
-            if (routes.includes("/" + route)) {
-              window.location.href = "/" + route;
-              return;
-            } else {
-              toast.error("This route is not available!");
-              return;
+              if (routes.includes("#" + route)) {
+                // bring #+ route to top
+                document.querySelectorAll("a").forEach((a) => {
+                  if (a.getAttribute("href") === "#" + route) {
+                    a.click();
+                  }
+                });
+                return;
+              }
+
+              if (routes.includes("/" + route)) {
+                window.location.href = "/" + route;
+                return;
+              } else {
+                toast.error("This route is not available!");
+                return;
+              }
             }
           }
+        } else {
+          toast.error("There are no routes available!");
         }
       }
     }
@@ -220,10 +231,16 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
   recognition.onend = (): void => {
     if (isListening) {
       recognition.start();
+      if (window.localStorage) {
+        localStorage.setItem("isListening", "true");
+      }
     } else {
       console.log("Voice recognition deactivated.");
 
       recognition.stop();
+      if (window.localStorage) {
+        localStorage.removeItem("isListening");
+      }
     }
   };
 
@@ -235,6 +252,13 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
       alert("Speech Recognition is not available on this browser!");
       alert("Please switch to Chromium based browsers or Safari!");
     }
+
+    if (window.localStorage) {
+      if (localStorage.getItem("isListening")) {
+        setIsListening(true);
+        startRecognition();
+      }
+    }
   }, []);
 
   React.useEffect(() => {
@@ -243,10 +267,8 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
       console.log("DOMContentLoaded event fired!");
     });
     const domJSON = domToJson(document.body);
-    console.log(domJSON);
     setDomJSON(domJSON);
     const allRoutes = detectRoutes(domJSON);
-    console.log(allRoutes);
     setRoutes(allRoutes);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

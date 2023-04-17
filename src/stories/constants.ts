@@ -12,5 +12,6 @@ export const DEFAULT_SCROLLING_COMMANDS: string[] = [
   "scroll by",
   "scroll to",
   "move by",
-  "scroll by",
 ];
+
+export const DEFAULT_NAVIGATION_COMMANDS: string[] = ["navigate to", "go to"];

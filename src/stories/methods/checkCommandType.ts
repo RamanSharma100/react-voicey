@@ -1,4 +1,7 @@
-import { DEFAULT_SCROLLING_COMMANDS } from "../constants";
+import {
+  DEFAULT_NAVIGATION_COMMANDS,
+  DEFAULT_SCROLLING_COMMANDS,
+} from "../constants";
 
 export interface ICommandType {
   commandType: string;
@@ -16,6 +19,12 @@ export const checkCommandType = (
     ...new Set([
       ...DEFAULT_SCROLLING_COMMANDS,
       ...(commandsList.scrolling || []),
+    ]),
+  ];
+  commandsList.navigation = [
+    ...new Set([
+      ...DEFAULT_NAVIGATION_COMMANDS,
+      ...(commandsList.navigation || []),
     ]),
   ];
   const keys: string[] = Object.keys(commandsList);

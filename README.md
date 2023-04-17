@@ -1,4 +1,4 @@
-# react-voicey (V 1.0.5) 🎙️💻
+# react-voicey (V 2.0.0) 🎙️💻
 
 A React library that enables voice controls for your React apps without the need of extra code.
 
@@ -48,18 +48,6 @@ So, this library will also work in some browsers as given below:-
     const App = ()=> {
         <>
         <InitializeVoiceControls
-            commands={{
-                navigation: [
-                'go to',
-                'navigate to'
-                ],
-                scrolling: [
-                'scroll by',
-                'scroll to',
-                'move by',
-                'scroll by'
-                ]
-            }}
             enableNavigationControls
             enableScrollingControls
             />
@@ -77,7 +65,7 @@ So, this library will also work in some browsers as given below:-
 
 An object containing the commands you want to use.
 
-_default_: `{ navigation: [], scrolling: ['scroll by', 'scroll to', 'move by', 'scroll by',"scroll down", "move down", "scroll up", "move up"] }` when enableNavigationCommands and enableScrollingCommands are `true` accordingly.
+_default_: `{ navigation: ["navigate to", "go to"], scrolling: ['scroll by', 'scroll to', 'move by', 'scroll by',"scroll down", "move down", "scroll up", "move up"] }` when enableNavigationCommands and enableScrollingCommands are `true` accordingly.
 
 **enableNavigationControls**:
 `boolean` **_optional_**

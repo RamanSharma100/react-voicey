@@ -17,10 +17,6 @@ export const EnableVoiceControls: any = Template.bind({});
 EnableVoiceControls.args = {
   enableNavigationControls: true,
   enableScrollingControls: true,
-  commands: {
-    navigation: ["go to", "navigate to"],
-    scrolling: [],
-  },
 };
 
 EnableVoiceControls.argTypes = {

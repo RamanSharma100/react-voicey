@@ -8,7 +8,7 @@
     "dist"
   ],
   "types": "dist/index.d.ts",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "dependencies": {
     "@types/node": "^16.11.26",
     "react-toastify": "^8.2.0"

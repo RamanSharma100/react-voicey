@@ -65,7 +65,7 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
       text: "Started Listening Commands!",
     });
     setIsListening(true);
-    if (window.localStorage) {
+    if ((window as any).localStorage) {
       localStorage.setItem("isListening", "true");
     }
   };
@@ -78,7 +78,7 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
       text: "Stopped Listening Commands!",
     });
     setIsListening(false);
-    if (window.localStorage) {
+    if ((window as any).localStorage) {
       localStorage.removeItem("isListening");
     }
   };
@@ -176,7 +176,7 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
 
             if (route && route !== "") {
               if (route === "home" || route === "index") {
-                window.location.href = "/";
+                (window as any).location.href = "/";
                 return;
               }
 
@@ -191,7 +191,7 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
               }
 
               if (routes.includes("/" + route)) {
-                window.location.href = "/" + route;
+                (window as any).location.href = "/" + route;
                 return;
               } else {
                 toast.error("This route is not available!");
@@ -218,7 +218,7 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
       if (commandType === "scrolling") {
         if (commands.scrolling?.includes(cmdName.toLowerCase())) {
           if (cmdName === "scroll to top" || cmdName === "move to top") {
-            window.scrollTo(0, 0);
+            (window as any).scrollTo(0, 0);
             setText("Scrolled to top!");
             speak({
               text: "Scrolled to top!",
@@ -226,7 +226,7 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
             return;
           }
           if (cmdName === "scroll to bottom" || cmdName === "move to bottom") {
-            window.scrollTo(0, maxScroll);
+            (window as any).scrollTo(0, maxScroll);
             setText("Scrolled to bottom!");
             speak({
               text: "Scrolled to bottom!",
@@ -234,7 +234,7 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
             return;
           }
           if (cmdName === "scroll to middle" || cmdName === "move to middle") {
-            window.scrollTo(0, maxScroll / 2);
+            (window as any).scrollTo(0, maxScroll / 2);
             setText("Scrolled to middle of the page!");
             speak({
               text: "Scrolled to middle of the page!",
@@ -243,7 +243,7 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
           }
 
           if (cmdName === "scroll down" || cmdName === "move down") {
-            window.scrollBy(0, 100);
+            (window as any).scrollBy(0, 100);
             setText("Scrolled down by 100 pixels!");
             speak({
               text: "Scrolled down by 100 pixels!",
@@ -252,7 +252,7 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
           }
 
           if (cmdName === "scroll up" || cmdName === "move up") {
-            window.scrollBy(0, -100);
+            (window as any).scrollBy(0, -100);
             setText("Scrolled up by 100 pixels!");
             speak({
               text: "Scrolled up by 100 pixels!",
@@ -287,7 +287,7 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
               );
             console.log(command);
             if (command.toLowerCase().includes("by")) {
-              window.scrollBy(0, px_per);
+              (window as any).scrollBy(0, px_per);
               setText(
                 "Scrolled by " +
                   px_per +
@@ -314,7 +314,7 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
               return;
             }
             if (command.toLowerCase().includes("to")) {
-              window.scrollTo(0, px_per);
+              (window as any).scrollTo(0, px_per);
               setText("Scrolled to " + px_per + " pixels!");
               speak({
                 text: "Scrolled to " + px_per + " pixels!",
@@ -330,21 +330,24 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
   recognition.onend = (): void => {
     if (isListening) {
       recognition.start();
-      if (window.localStorage) {
+      if ((window as any).localStorage) {
         localStorage.setItem("isListening", "true");
       }
     } else {
       console.log("Voice recognition deactivated.");
 
       recognition.stop();
-      if (window.localStorage) {
+      if ((window as any).localStorage) {
         localStorage.removeItem("isListening");
       }
     }
   };
 
   React.useEffect(() => {
-    if ("speechRecognition" in window || "webkitSpeechRecognition" in window) {
+    if (
+      "speechRecognition" in (window as any) ||
+      "webkitSpeechRecognition" in (window as any)
+    ) {
       setIsSpeechRecognitionSupported(true);
     } else {
       setIsSpeechRecognitionSupported(false);
@@ -352,7 +355,7 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
       alert("Please switch to Chromium based browsers or Safari!");
     }
 
-    if (window.localStorage) {
+    if ((window as any).localStorage) {
       if (localStorage.getItem("isListening")) {
         setIsListening(true);
         startRecognition();
@@ -361,7 +364,7 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
   }, []);
 
   React.useEffect(() => {
-    // window.addEventListener("DOMContentLoaded", () => {
+    // (window as any).addEventListener("DOMContentLoaded", () => {
     //   console.log("DOMContentLoaded event fired!");
     // });
     const domJSON = domToJson(document.body);
@@ -370,7 +373,7 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
     setRoutes(allRoutes);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [window.location.pathname]);
+  }, [(window as any).location.pathname]);
 
   return (
     <>

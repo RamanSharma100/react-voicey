@@ -29,7 +29,10 @@ const useSpeechSynthesis = (props: IProps = {}) => {
   };
 
   useEffect((): void => {
-    if (typeof window !== "undefined" && window.speechSynthesis) {
+    if (
+      typeof (window as any) !== "undefined" &&
+      (window as any).speechSynthesis
+    ) {
       setSupported(true);
     }
   }, []);
@@ -49,8 +52,9 @@ const useSpeechSynthesis = (props: IProps = {}) => {
 
     // Firefox won't repeat an utterance that has been
     // spoken, so we need to create a new instance each time
-    const utterance: SpeechSynthesisUtterance =
-      new window.SpeechSynthesisUtterance();
+    const utterance: SpeechSynthesisUtterance = new (
+      window as any
+    ).SpeechSynthesisUtterance();
 
     utterance.text = text;
     utterance.voice = voice;
@@ -58,13 +62,13 @@ const useSpeechSynthesis = (props: IProps = {}) => {
     utterance.rate = rate;
     utterance.pitch = pitch;
     utterance.volume = volume;
-    window.speechSynthesis.speak(utterance);
+    (window as any).speechSynthesis.speak(utterance);
   };
 
   const cancel = (): void => {
     if (!supported) return;
     setSpeaking(false);
-    window.speechSynthesis.cancel();
+    (window as any).speechSynthesis.cancel();
   };
 
   return {

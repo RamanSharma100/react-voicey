@@ -19,7 +19,7 @@ const highlightTextInDom = (domJSON: any, text: string) => {
 
   if (domElement) {
     const range = document.createRange();
-    const selection: any = window.getSelection();
+    const selection: any = (window as any).getSelection();
 
     range.selectNodeContents(domElement);
     selection.removeAllRanges();

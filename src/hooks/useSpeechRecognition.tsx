@@ -1,0 +1,357 @@
+import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import {
+  ICommandType,
+  checkCommandType,
+} from "../stories/methods/checkCommandType";
+// import { recognition } from "../stories/APIs/speechRecognitionAPI";
+
+const useSpeechRecognition = ({
+  setIsListening,
+  isListening,
+  commands,
+  setText,
+  speak,
+  isInstructionTableOpened,
+  setIsInstructionTableOpened,
+  enableNavigationControls,
+  enableScrollingControls,
+  routes,
+}: any) => {
+  const [recognition, setRecognition] = useState<any>(
+    typeof (window as any) !== "undefined"
+      ? new (window as any).webkitSpeechRecognition()
+      : null
+  );
+  const [maxScroll, setMaxScroll] = useState<any>(
+    typeof (document as any) !== "undefined"
+      ? document.documentElement.scrollHeight -
+          document.documentElement.clientHeight
+      : 0
+  );
+
+  const startRecognition = (): void => {
+    if (recognition) {
+      recognition.start();
+      toast.info("Started Listening Commands!");
+      setText("Started Listening Commands!");
+      speak({
+        text: "Started Listening Commands!",
+      });
+      setIsListening(true);
+    }
+    if ((window as any).localStorage) {
+      localStorage.setItem("isListening", "true");
+    }
+  };
+
+  const stopRecognition = (): void => {
+    if (recognition) {
+      recognition.stop();
+      toast.info("Stopped Listening Commands!");
+      setText("Stopped Listening Commands!");
+      speak({
+        text: "Stopped Listening Commands!",
+      });
+      setIsListening(false);
+    }
+    if ((window as any).localStorage) {
+      localStorage.removeItem("isListening");
+    }
+  };
+
+  useEffect(() => {
+    //     if (
+    //       typeof (window as any) !== "undefined" &&
+    //       (window as any).webkitSpeechRecognition
+    //     ) {
+    //   const SpeechRecognition = (window as any).webkitSpeechRecognition;
+    //   const recognition = new SpeechRecognition();
+    //   recognition.continuous = false;
+    //   recognition.interimResults = true;
+    //   recognition.lang = "en-US";
+    //   setRecognition(recognition);
+
+    if ((window as any).localStorage) {
+      if (localStorage.getItem("isListening")) {
+        setIsListening(true);
+        startRecognition();
+      }
+    }
+  }, []);
+
+  recognition.onstart = (): void => {
+    console.log("Voice commands activated.");
+  };
+
+  recognition.onresult = (event: any): void => {
+    const command: string = event.results[0][0].transcript.replace(".", "");
+    const { commandType, cmd, cmdName }: ICommandType = checkCommandType(
+      commands,
+      command
+    );
+
+    // console.log({ commandType, cmd, cmdName });
+    //stop taking commands
+
+    if (isListening && command.toLowerCase().includes("stop taking commands")) {
+      stopRecognition();
+      return;
+    }
+
+    // open commands table commands
+    if (
+      isListening &&
+      (command.toLowerCase().includes("open commands table") ||
+        command.toLowerCase().includes("open command table") ||
+        command.toLowerCase().includes("open instruction table") ||
+        command.toLowerCase().includes("close command table") ||
+        command.toLowerCase().includes("close instruction table") ||
+        command.toLowerCase().includes("close commands table"))
+    ) {
+      if (
+        command.toLowerCase().includes("open commands table") ||
+        command.toLowerCase().includes("open command table") ||
+        command.toLowerCase().includes("open instruction table")
+      ) {
+        if (!isInstructionTableOpened) {
+          setIsInstructionTableOpened(true);
+          toast.info("Opened Commands Table!");
+          setText("Opened Commands Table!");
+          speak({
+            text: "Opened Commands Table!",
+          });
+        } else {
+          toast.info("Commands Table is already opened!");
+          toast.info("Try, Close Commands Table Command");
+          speak({
+            text: "Commands Table is already opened!, Try, Close Commands Table Command",
+          });
+          setText(
+            "Commands Table is already opened!, Try, Close Commands Table Command"
+          );
+        }
+      }
+
+      if (
+        command.toLowerCase().includes("close command table") ||
+        command.toLowerCase().includes("close instruction table") ||
+        command.toLowerCase().includes("close commands table")
+      ) {
+        if (isInstructionTableOpened) {
+          setIsInstructionTableOpened(false);
+          toast.info("Closed Commands Table!");
+          setText("Closed Commands Table!");
+          speak({
+            text: "Closed Commands Table!",
+          });
+        } else {
+          toast.info("Commands Table is already closed!");
+          toast.info("Try, Open Commands Table Command");
+          setText(
+            "Commands Table is already closed!, Try, Open Commands Table Command"
+          );
+          speak({
+            text: "Commands Table is already closed!, Try, Open Commands Table Command",
+          });
+        }
+      }
+    }
+
+    // navigation commands
+    if (enableNavigationControls) {
+      if (commandType === "navigation") {
+        if (routes.length > 0) {
+          let route: string = "";
+          if (commands.navigation?.includes(cmdName.toLowerCase())) {
+            if (command.split(" ")[command.split(" ").length - 1] === "page") {
+              route = cmd.split(" ")[cmd.split(" ").indexOf("page") - 1];
+            }
+            if (command.split(" ")[command.split(" ").length - 1] === "route") {
+              route = cmd.split(" ")[cmd.split(" ").indexOf("route") - 1];
+            }
+
+            if (route && route !== "") {
+              if (route === "home" || route === "index") {
+                (window as any).location.href = "/";
+                return;
+              }
+
+              if (routes.includes("#" + route)) {
+                // bring #+ route to top
+                document.querySelectorAll("a").forEach((a) => {
+                  if (a.getAttribute("href") === "#" + route) {
+                    a.click();
+                  }
+                });
+                return;
+              }
+
+              if (routes.includes("/" + route)) {
+                (window as any).location.href = "/" + route;
+                return;
+              } else {
+                toast.error("This route is not available!");
+                speak({
+                  text: "This route is not available!",
+                });
+                setText("This route is not available!");
+                return;
+              }
+            }
+          }
+        } else {
+          toast.error("There are no routes available!");
+          speak({
+            text: "There are no routes available!",
+          });
+          setText("There are no routes available!");
+        }
+      }
+    }
+
+    // scrolling commands
+    if (enableScrollingControls) {
+      if (commandType === "scrolling") {
+        if (commands.scrolling?.includes(cmdName.toLowerCase())) {
+          if (cmdName === "scroll to top" || cmdName === "move to top") {
+            (window as any).scrollTo(0, 0);
+            setText("Scrolled to top!");
+            speak({
+              text: "Scrolled to top!",
+            });
+            return;
+          }
+          if (cmdName === "scroll to bottom" || cmdName === "move to bottom") {
+            (window as any).scrollTo(0, maxScroll);
+            setText("Scrolled to bottom!");
+            speak({
+              text: "Scrolled to bottom!",
+            });
+            return;
+          }
+          if (cmdName === "scroll to middle" || cmdName === "move to middle") {
+            (window as any).scrollTo(0, maxScroll / 2);
+            setText("Scrolled to middle of the page!");
+            speak({
+              text: "Scrolled to middle of the page!",
+            });
+            return;
+          }
+
+          if (cmdName === "scroll down" || cmdName === "move down") {
+            (window as any).scrollBy(0, 100);
+            setText("Scrolled down by 100 pixels!");
+            speak({
+              text: "Scrolled down by 100 pixels!",
+            });
+            return;
+          }
+
+          if (cmdName === "scroll up" || cmdName === "move up") {
+            (window as any).scrollBy(0, -100);
+            setText("Scrolled up by 100 pixels!");
+            speak({
+              text: "Scrolled up by 100 pixels!",
+            });
+            return;
+          }
+
+          if (
+            command.toLowerCase().includes("px") ||
+            command.toLowerCase().includes("pixels") ||
+            command.toLowerCase().includes("pixel") ||
+            command.toLowerCase().includes("%") ||
+            command.toLowerCase().includes("percent") ||
+            command.toLowerCase().includes("percentage")
+          ) {
+            const px_per: number =
+              Number(
+                command.split(" ")[command.split(" ").indexOf("px") - 1]
+              ) ||
+              Number(
+                command.split(" ")[command.split(" ").indexOf("pixels") - 1]
+              ) ||
+              Number(
+                command.split(" ")[command.split(" ").indexOf("pixel") - 1]
+              ) ||
+              Number(command.split(" ")[command.split(" ").indexOf("%") - 1]) ||
+              Number(
+                command.split(" ")[command.split(" ").indexOf("percent") - 1]
+              ) ||
+              Number(
+                command.split(" ")[command.split(" ").indexOf("percentage") - 1]
+              );
+            console.log(command);
+            if (command.toLowerCase().includes("by")) {
+              (window as any).scrollBy(0, px_per);
+              setText(
+                "Scrolled by " +
+                  px_per +
+                  `${
+                    command.toLowerCase().includes("px") ||
+                    command.toLowerCase().includes("pixels") ||
+                    command.toLowerCase().includes("pixel")
+                      ? " pixels!"
+                      : "percentage!"
+                  }`
+              );
+              speak({
+                text:
+                  "Scrolled by " +
+                  px_per +
+                  `${
+                    command.toLowerCase().includes("px") ||
+                    command.toLowerCase().includes("pixels") ||
+                    command.toLowerCase().includes("pixel")
+                      ? " pixels!"
+                      : "percentage!"
+                  }`,
+              });
+              return;
+            }
+            if (command.toLowerCase().includes("to")) {
+              (window as any).scrollTo(0, px_per);
+              setText("Scrolled to " + px_per + " pixels!");
+              speak({
+                text: "Scrolled to " + px_per + " pixels!",
+              });
+              return;
+            }
+          }
+        }
+      }
+    }
+  };
+
+  recognition.onend = (): void => {
+    if (isListening) {
+      if (recognition) {
+        recognition.start();
+      }
+      if ((window as any).localStorage) {
+        localStorage.setItem("isListening", "true");
+      }
+    } else {
+      console.log("Voice recognition deactivated.");
+      if (recognition) {
+        recognition.stop();
+      }
+      if ((window as any).localStorage) {
+        localStorage.removeItem("isListening");
+      }
+    }
+  };
+  // } else {
+  //   console.log("Speech Recognition not supported");
+  //   toast.error("Speech Recognition not supported in this browser");
+  // }
+
+  return {
+    recognition,
+    startRecognition,
+    stopRecognition,
+  };
+};
+
+export default useSpeechRecognition;

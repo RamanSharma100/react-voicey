@@ -5,6 +5,11 @@ declare global {
   }
 }
 
+if (typeof window !== "undefined") {
+  window.speechRecognition =
+    window.speechRecognition || window.webkitSpeechRecognition;
+}
+
 const speechRecognition =
   (window as any).speechRecognition ||
   (window as any).webkitSpeechRecognition ||

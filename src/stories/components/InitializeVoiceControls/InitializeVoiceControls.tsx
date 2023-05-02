@@ -207,11 +207,31 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
 
               if (route && route !== "") {
                 if (route === "home" || route === "index") {
+                  // check if the route is already on home
+                  if (window.location.pathname === "/") {
+                    toast.info("You are already on home page!");
+                    speak({
+                      text: "You are already on home page!",
+                    });
+                    setText("You are already on home page!");
+                    return;
+                  }
+
                   (window as any).location.href = "/";
                   return;
                 }
 
                 if (routes.includes("#" + route)) {
+                  // check if the route is already on the route
+                  if (window.location.hash === "#" + route) {
+                    toast.info("You are already on " + route + " section!");
+                    speak({
+                      text: "You are already on " + route + " section!",
+                    });
+                    setText("You are already on " + route + " section!");
+                    return;
+                  }
+
                   // bring #+ route to top
                   document.querySelectorAll("a").forEach((a) => {
                     if (a.getAttribute("href") === "#" + route) {
@@ -222,6 +242,16 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
                 }
 
                 if (routes.includes("/" + route)) {
+                  // check if the route is already on the route
+                  if (window.location.pathname === "/" + route) {
+                    toast.info("You are already on " + route + " page!");
+                    speak({
+                      text: "You are already on " + route + " page!",
+                    });
+                    setText("You are already on " + route + " page!");
+                    return;
+                  }
+
                   (window as any).location.href = "/" + route;
                   return;
                 } else {
@@ -386,9 +416,6 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
   }
 
   React.useEffect(() => {
-    // (window as any).addEventListener("DOMContentLoaded", () => {
-    //   console.log("DOMContentLoaded event fired!");
-    // });
     const domJSON = domToJson(document.body);
     setDomJSON(domJSON);
     const allRoutes = detectRoutes(domJSON);

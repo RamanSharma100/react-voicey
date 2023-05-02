@@ -1,7 +1,10 @@
 // import { faClose } from "@fortawesome/free-solid-svg-icons";
 import React, { FunctionComponent as FC } from "react";
 import { toast } from "react-toastify";
-import { DEFAULT_SCROLLING_COMMANDS } from "../../constants";
+import {
+  DEFAULT_SCROLLING_COMMANDS,
+  DEFAULT_NAVIGATION_COMMANDS,
+} from "../../constants";
 import { IVoiceCommandsProps } from "../../interfaces";
 
 import { Button } from "../Button/Button";
@@ -29,7 +32,6 @@ const VoiceControlsInstructionTable: FC<IVoiceControlsInstructionTableProps> =
     startRecognition,
     setIsInstructionTableOpened,
   }) => {
-
     return (
       <div className="instruction-table-box">
         <div className="instruction-table-modal">
@@ -147,7 +149,7 @@ const VoiceControlsInstructionTable: FC<IVoiceControlsInstructionTableProps> =
                   <tbody className="instruction-table-tbody">
                     <tr>
                       <td>
-                        {commands.navigation?.map(
+                        {DEFAULT_NAVIGATION_COMMANDS.map(
                           (command: string, index: number) => (
                             <p
                               key={index * Math.random() * command.length}
@@ -164,18 +166,29 @@ const VoiceControlsInstructionTable: FC<IVoiceControlsInstructionTableProps> =
                         </p>
                         <p className="instruction-table-row-examples">
                           {commands.navigation?.map(
-                            (command: string, index: number) => (
-                              <>
-                                {" "}
-                                {index +
-                                  1 +
-                                  ") " +
-                                  command +
-                                  " <__route_name___> page/route"}
-                                <br />
-                                <br />
-                              </>
-                            )
+                            (command: string, index: number) =>
+                              !DEFAULT_NAVIGATION_COMMANDS.find(
+                                (cmd: string) =>
+                                  command.toLowerCase().includes(cmd) && cmd
+                              ) ? (
+                                <>
+                                  {" "}
+                                  {index +
+                                    1 +
+                                    ") " +
+                                    command +
+                                    " <__route_name___> page/route"}
+                                  <br />
+                                  <br />
+                                </>
+                              ) : (
+                                <>
+                                  {" "}
+                                  {index + 1 + ") " + command}
+                                  <br />
+                                  <br />
+                                </>
+                              )
                           )}
                         </p>
                       </td>

@@ -208,7 +208,7 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
               if (route && route !== "") {
                 if (route === "home" || route === "index") {
                   // check if the route is already on home
-                  if (window.location.pathname === "/") {
+                  if ((window as any)?.location.pathname === "/") {
                     toast.info("You are already on home page!");
                     speak({
                       text: "You are already on home page!",
@@ -223,7 +223,7 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
 
                 if (routes.includes("#" + route)) {
                   // check if the route is already on the route
-                  if (window.location.hash === "#" + route) {
+                  if ((window as any)?.location.hash === "#" + route) {
                     toast.info("You are already on " + route + " section!");
                     speak({
                       text: "You are already on " + route + " section!",
@@ -243,7 +243,7 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
 
                 if (routes.includes("/" + route)) {
                   // check if the route is already on the route
-                  if (window.location.pathname === "/" + route) {
+                  if ((window as any)?.location.pathname === "/" + route) {
                     toast.info("You are already on " + route + " page!");
                     speak({
                       text: "You are already on " + route + " page!",

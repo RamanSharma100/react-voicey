@@ -42,6 +42,8 @@ So, this library will also work in some browsers as given below:-
 
 ## Example and Demo
 
+### ReactJs
+
     import React from 'react';
     import {InitializeVoiceControls} from 'react-voicey';
 
@@ -57,6 +59,33 @@ So, this library will also work in some browsers as given below:-
     }
 
     export default App;
+
+### NextJS
+
+    # _app.jsx
+
+    import '@/styles/globals.css';
+    import dynamic from 'next/dynamic';
+
+    export default function App({ Component, pageProps }: AppProps) {
+
+    const InitializeVoiceControls = dynamic(
+        () => import('react-voicey').then(mod => mod.InitializeVoiceControls),
+        { ssr: false }
+    );
+
+    return (
+        <>
+            <InitializeVoiceControls
+                enableNavigationControls
+                enableScrollingControls
+            />
+            <Navbar />
+            <Component {...pageProps} />
+            <Footer />
+        </>
+    );
+    }
 
 ## Arguments
 

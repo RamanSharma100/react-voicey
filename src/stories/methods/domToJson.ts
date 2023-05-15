@@ -1,4 +1,3 @@
-// traverse the dom and get all information about the elements and their children javascript
 
 const domToJson = (dom: any) => {
   const children: any = Array.from(dom.children).map((child) => {

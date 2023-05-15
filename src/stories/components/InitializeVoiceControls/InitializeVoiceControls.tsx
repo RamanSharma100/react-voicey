@@ -55,7 +55,9 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
   // }, [speaking]);
 
   const startRecognition = (): void => {
-    recognition.start();
+    try {
+      recognition.start();
+    } catch (err) {}
     toast.info("Started Listening Commands!");
     setText("Started Listening Commands!");
     speak({
@@ -68,7 +70,9 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
   };
 
   const stopRecognition = (): void => {
-    recognition.stop();
+    try {
+      recognition.stop();
+    } catch (err) {}
     toast.info("Stopped Listening Commands!");
     setText("Stopped Listening Commands!");
     speak({
@@ -103,6 +107,8 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
       const maxScroll =
         (document as any).documentElement.scrollHeight -
         (document as any).documentElement.clientHeight;
+
+      setMaxScroll(maxScroll);
     }
   }, []);
 
@@ -206,7 +212,7 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
               }
 
               if (route && route !== "") {
-                if (route === "home" || route === "index") {
+                if (route.startsWith("home") || route === "index") {
                   // check if the route is already on home
                   if ((window as any)?.location.pathname === "/") {
                     toast.info("You are already on home page!");
@@ -400,14 +406,19 @@ export const InitializeVoiceControls: FC<InitializeVoiceControlsProps> = ({
 
     recognition.onend = (): void => {
       if (isListening) {
-        recognition.start();
+        try {
+          recognition.start();
+        } catch (err) {}
+
         if ((window as any).localStorage) {
           localStorage.setItem("isListening", "true");
         }
       } else {
         console.log("Voice recognition deactivated.");
 
-        recognition.stop();
+        try {
+          recognition.stop();
+        } catch (err) {}
         if ((window as any).localStorage) {
           localStorage.removeItem("isListening");
         }

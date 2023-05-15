@@ -1,4 +1,5 @@
 const findTextInDom = (json: any, searchText: string): any => {
+  let foundElement = null;
   if (json.text?.toLowerCase().includes(searchText.toLowerCase())) {
     console.log(`Found text "${searchText}" in tag "${json.tagName}"`);
     console.log(json.attributes);
@@ -8,7 +9,14 @@ const findTextInDom = (json: any, searchText: string): any => {
   for (const child of json.children) {
     const found = findTextInDom(child, searchText);
 
-    if (found) return found;
+    if (found) {
+      foundElement = found;
+      break;
+    }
+  }
+
+  if (foundElement) {
+    return foundElement;
   }
 
   return false;

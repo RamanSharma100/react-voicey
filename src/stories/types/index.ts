@@ -1,4 +1,4 @@
-export interface IVoiceCommandsProps {
+export type IVoiceCommandsProps = {
   navigation?: string[];
   scrolling?: string[];
-}
+};

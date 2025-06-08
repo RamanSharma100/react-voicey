@@ -1,13 +1,12 @@
-import React from "react";
-import "./button.css";
+import './button.css';
 
 interface ButtonProps {
   primary?: boolean;
   className?: string;
   backgroundColor?: string;
-  size?: "small" | "medium" | "large";
+  size?: 'small' | 'medium' | 'large';
   label?: string;
-  FaIcon?: any;
+  icon?: React.ReactNode;
   onClick?: () => void;
 }
 
@@ -16,29 +15,28 @@ interface ButtonProps {
  */
 export const Button = ({
   primary = false,
-  size = "medium",
+  size = 'medium',
   backgroundColor,
   label,
   className,
-  FaIcon,
+  icon: Icon,
   ...props
 }: ButtonProps) => {
   const mode = primary
-    ? "storybook-button--primary"
-    : "storybook-button--secondary";
+    ? 'storybook-button--primary'
+    : 'storybook-button--secondary';
   return (
     <button
       type="button"
       className={[
-        "storybook-button",
+        'storybook-button',
         `storybook-button--${size}`,
         mode,
         className,
-      ].join(" ")}
+      ].join(' ')}
       style={{ backgroundColor }}
-      {...props}
-    >
-      {FaIcon && <FaIcon />} {label}
+      {...props}>
+      {Icon} {label}
     </button>
   );
 };
